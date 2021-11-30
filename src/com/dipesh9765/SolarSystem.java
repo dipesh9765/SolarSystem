@@ -223,21 +223,12 @@ class SkyFrame extends JFrame implements ChangeListener, ActionListener {
         setVisible(true);
     }
 
-    /**
-     * Gets the current value of lengthScaleFactor used to calculate
-     * position of planets within the display.
-     */
+     
     public static int getScaleFactor() {
         return lengthScaleFactor;
     }
 
-    /**
-     * The method actionPerformed implements the action called for by the
-     * user.
-     *
-     * @param event An ActionEvent.
-     * @see ActionEvent
-     */
+     
     public void actionPerformed(ActionEvent event) {
         String command = event.getActionCommand();
 
@@ -292,21 +283,12 @@ class SkyFrame extends JFrame implements ChangeListener, ActionListener {
         }
     }
 
-    /**
-     * Gets the SkyPanel that displays the solar system.
-     *
-     * @see SkyPanel
-     */
+    
     public SkyPanel getPanel() {
         return skyPanel;
     }
 
-    /**
-     * Changes the sun's mass according to the input from the slider.
-     *
-     * @param event ChangeEvent
-     * @see ChangeEvent
-     */
+    
     public void stateChanged(ChangeEvent event) {
         JSlider source = (JSlider) event.getSource();
         if (source.getValueIsAdjusting() != true)
@@ -314,83 +296,35 @@ class SkyFrame extends JFrame implements ChangeListener, ActionListener {
     }
 }
 
-/**
- * Contains the sun, planets and moons of the simulated solar system.
- *
- * @see JPanel
- */
+ 
 class SkyPanel extends JPanel {
-    /**
-     * The maximun number of orbits allowed in solar system.
-     */
+     
     private final int numberOfPlanets;
-    /**
-     * Number of stars in the background.
-     */
+   
     private final int numStars = 30;
-    /**
-     * The maximum number of orbits (i.e. planets) allowed in the solar
-     * system.
-     */
+  
     private final int maxNumberOfOrbits;
-    /**
-     * The initial size of the panel in pixels
-     */
+    
     private final int xMaxPixels;
     private final int xMinPixels;
     private final int yMaxPixels;
     private final int yMinPixels;
-    /**
-     * Minimum and maximum planet diameter in pixels.
-     */
+   
     private final double minPlanetDia = 20;
     private final double maxPlanetDia = 60;
-    /**
-     * A boolean array indicating if orbit indexed is occupied by a planet.
-     */
+    
     private final boolean[] orbitOccupied;
-    /**
-     * An array of planet objects. @see Planet
-     */
+    
     private final Planet[] planet;
-    /**
-     * A vector containing Stars objects.
-     *
-     * @see Stars
-     */
+    
     private final Vector starGroup;
-    /**
-     * Sun object.
-     *
-     * @see Sun
-     */
+   
     private final Sun sun;
-    /**
-     * Boolean variables indicating whether or not to display energy, velocity,
-     * acceleration or position. Variable freeze is set to true to stop the
-     * display from updating.
-     */
+     
     private boolean displayEnergy = false, displayVel = false, displayAcc = false,
             displayPos = false, freeze = false;
 
-    /**
-     * SkyPanel constructor.
-     * The constructor calculates the maximum number of planets that will
-     * be visible given mMaxXPosition, and then determines the maximum
-     * number of orbits that are needed. It then creates an array of
-     * planets and places each planet at random within the orbits. Finally,
-     * it creates a star group which is displayed for the default view
-     * of the solar system (more star groups are created as needed when/if
-     * the user zooms out for a wider view of the solar system).
-     *
-     * @param dt               Time increment for numerical integration of differential
-     *                         equations of motion.
-     * @param mMaxXPosition    Maximum value of X coordinate allowed (in pixels).
-     * @param mMaxYPosition    Maximum value of Y coordinate allowed (in pixels).
-     * @param mNumberOfPlanets Number of planets in solar system.
-     * @param mSun             Reference to Sun object of solar system.
-     * @see Sun
-     */
+     
     public SkyPanel(double dt,
                     int mMaxXPosition,
                     int mMaxYPosition,
@@ -433,23 +367,12 @@ class SkyPanel extends JPanel {
         populateStarGroup(1);
     }
 
-    /**
-     * Creates a new star group if needed for the given lengthScaleFactor.
-     *
-     * @param mLengthScaleFactor The scale factor which determines sizing and
-     *                           distances for positioning objects in display. This allows user to
-     *                           zoom in or out.
-     */
+     
     public void populateStarGroup(int mLengthScaleFactor) {
-        //
-        // Check to see if we have already made a star group for
-        // this zoom factor.
-        //
+         
         if (starGroup.size() >= mLengthScaleFactor)
             return;
-        //
-        // If not, make a new star group.
-        //
+       
 
         Stars stars = new Stars(numStars / SkyFrame.getScaleFactor(), // number of stars
                 SkyFrame.getScaleFactor() * (xMaxPixels -
@@ -461,12 +384,7 @@ class SkyPanel extends JPanel {
         starGroup.addElement(stars);
     }
 
-    /**
-     * Searches randomly among the allowed orbits until it finds an
-     * unoccupied orbit.
-     *
-     * @return double The intial radius of the unoccupied orbit.
-     */
+     
     private double getUnoccupiedOrbit() {
         int trialOrbitNum = (int) (Math.random() * maxNumberOfOrbits);
 
@@ -481,21 +399,13 @@ class SkyPanel extends JPanel {
         return 1.5 * sun.getDiameter() + trialOrbitNum * maxPlanetDia;
     }
 
-    /**
-     * Repaints the display.
-     *
-     * @param comp A Graphics object.
-     * @see Graphics
-     */
+  
     public void paintComponent(Graphics comp) {
         super.paintComponent(comp);
         Graphics2D comp2D = (Graphics2D) comp;
 
         sun.draw(comp2D);
-        //
-        // Only draw the star groups that are being displayed (i.e.
-        // are within the current scale factor).
-        //
+ 
         for (int i = 0; i < SkyFrame.getScaleFactor(); ++i)
             ((Stars) starGroup.get(i)).draw(comp2D);
 
@@ -512,20 +422,11 @@ class SkyPanel extends JPanel {
         }
     }
 
-    /**
-     * Prints the kinetic energy of the planet indicated by the parameter
-     * i as a percent of the total energy (kinetic + potential) of the planet.
-     *
-     * @param comp2D A 2D graphics object.
-     * @param i      Index of planet for which to display the kinetic energy.
-     * @see Graphics2D
-     */
+     
     private void drawEnergy(Graphics2D comp2D, int i) {
         comp2D.setColor(Color.white);
 
-        //
-        // Print kinetic energy as percent of total energy.
-        //
+         
 
         String percentKE = Integer.toString((int) (100 * planet[i].getKE() /
                 (planet[i].getKE() +
@@ -533,9 +434,7 @@ class SkyPanel extends JPanel {
         comp2D.drawString("KE% " + percentKE,
                 (int) planet[i].getAbsPos(Coord.X) + 50,
                 (int) planet[i].getAbsPos(Coord.Y) + 70);
-        //
-        // Print potential energy as percent of total energy.
-        //
+       
         String percentPE = Integer.toString((int) (100 * planet[i].getPE() /
                 (planet[i].getKE() +
                         planet[i].getPE())));
@@ -544,13 +443,7 @@ class SkyPanel extends JPanel {
                 (int) planet[i].getAbsPos(Coord.Y) + 82);
     }
 
-    /**
-     * Displays the velocity vector of the planet indexed by the parameter i.
-     *
-     * @param comp2D A 2D graphics object.
-     * @param i      Index of planet for which to display the kinetic energy.
-     * @see Graphics2D
-     */
+    
     private void drawVelocityVector(Graphics2D comp2D, int i) {
         float xPos = (float) planet[i].getAbsPos(Coord.X);
         float yPos = (float) planet[i].getAbsPos(Coord.Y);
@@ -563,15 +456,7 @@ class SkyPanel extends JPanel {
         comp2D.draw(new Line2D.Float(xPos, yPos, xVel, yVel));
         drawArrow(comp2D, xPos, yPos, xVel, yVel);
     }
-
-    /**
-     * Displays the acceleration vector for the planet indexed by the
-     * parameter i.
-     *
-     * @param comp2D A 2D graphics object.
-     * @param i      Index of planet for which to display the kinetic energy.
-     * @see Graphics2D
-     */
+ 
     private void drawAccelerationVector(Graphics2D comp2D, int i) {
         double xPos = planet[i].getAbsPos(Coord.X);
         double yPos = planet[i].getAbsPos(Coord.Y);
@@ -592,16 +477,7 @@ class SkyPanel extends JPanel {
                 (float) yAcc);
     }
 
-    /**
-     * Draws an arrow (vector) from (x0, y0) to (x1, y1).
-     *
-     * @param comp2D A 2D graphics object.
-     * @param x0     X coordinate of base of arrow.
-     * @param y0     Y coordinate of base of arrow.
-     * @param x1     X coordinate of tip of arrow.
-     * @param y1     Y coordinate of tip of arrow.
-     * @see Graphics2D
-     */
+    
     private void drawArrow(Graphics2D comp2D,
                            float x0,
                            float y0,
@@ -632,122 +508,61 @@ class SkyPanel extends JPanel {
         comp2D.fill(path);
     }
 
-    /**
-     * Set method to set boolean variable displayAcc.
-     *
-     * @param value Boolean value,
-     *              true = display acceleration vector,
-     *              false = do not display acceleration vector.
-     */
+     
     public void displayAcc(boolean value) {
         displayAcc = value;
     }
 
-    /**
-     * Set method to set boolean variable displayVel.
-     *
-     * @param value Boolean value,
-     *              true = display velocity vector,
-     *              false = do not display velocity vector.
-     */
+    
     public void displayVel(boolean value) {
         displayVel = value;
     }
 
-    /**
-     * Set method to set boolean variable displayEnergy.
-     *
-     * @param value Boolean value,
-     *              true = display kinetic energy,
-     *              false = do not display kinetic energy.
-     */
+     
     public void displayEnergy(boolean value) {
         displayEnergy = value;
     }
 
-    /**
-     * Set method to set boolean variable displayPos.
-     *
-     * @param value Boolean value,
-     *              true = display trace of spatial position,
-     *              false = do not display trace of spatial position.
-     */
+    
     public void displayPos(boolean value) {
         displayPos = value;
     }
 
-    /**
-     * Get method to get the value of the boolean variable displayPos.
-     *
-     * @return displayPos Boolean value.
-     * true = display trace of previous spatial positions of planets.
-     * false = do not display trace of previous spatial positions of planets.
-     */
+  
     public boolean showPos() {
         return displayPos;
     }
 
-    /**
-     * Erases traces of previous spatial positions of planets.
-     */
+     
     public void resetPos() {
         for (int i = 0; i < numberOfPlanets; ++i)
             planet[i].erasePrevPositions();
     }
 
-    /**
-     * A set method to set the boolean variable freeze.
-     * true = do not translate planets.
-     * false = translate planets according to normal physical laws of motion.
-     */
+   
     public void setFreeze(boolean value) {
         freeze = value;
     }
 
-    /**
-     * Get method to retrieve the maximum diameter allowed for planets.
-     * return double Maximum planet diameter (in pixels).
-     */
+     
     public double getMaxPlanetDiameter() {
         return maxPlanetDia;
     }
 }
 
-/**
- * Class Stars defines a group of stars that are displayed at random
- * locations. The stars are yellow circles that change diameter to simulate
- * twinlking.
- */
+ 
 class Stars {
-    /**
-     * Coordinates of the stars relative to the Sun's position.
-     */
+    
     private final double[] xPos;
     private final double[] yPos;
-    /**
-     * Initial diameter of the stars.
-     */
+ 
     private final double diameter = 5;
-    /**
-     * Number of stars.
-     */
+    
     private final int numOfStars;
-    /**
-     * The Sun at the center of the solar system.
-     */
+    
     private final Sun sun;
 
-    /**
-     * Constructor for creating a group of stars.
-     *
-     * @param mNumOfStars The number of stars to create.
-     * @param maxRadius   The maximum distance from the sun that a star may
-     *                    be positioned.
-     * @param minRadius   The minimum distance from the sun that a star may
-     *                    be positioned.
-     * @param mSun        The Sun object which defines the center of the solar
-     *                    system.
-     */
+    
     public Stars(int mNumOfStars,
                  double maxRadius,
                  double minRadius,
@@ -761,9 +576,7 @@ class Stars {
 
         if (minRadius == 0)
             minRadius += sun.getDiameter();
-        //
-        // Chose positions for each star at random between max and min radius.
-        //
+         
         for (int i = 0; i < numOfStars; ++i) {
             xPos[i] = (float) Math.random() * maxRadius;
             float yMin = xPos[i] > minRadius ?
@@ -779,17 +592,11 @@ class Stars {
         }
     }
 
-    /**
-     * The method draw displays the stars.
-     *
-     * @param comp2D The Graphics2D object in which to display the stars.
-     */
+    
     public void draw(Graphics2D comp2D) {
         comp2D.setColor(Color.yellow);
 
-        //
-        // Make stars twinkle by chosing random diameter for each star.
-        //
+         
 
         for (int i = 0; i < numOfStars; ++i) {
             double actualDia = diameter * Math.random();
@@ -807,53 +614,24 @@ class Stars {
     }
 }
 
-/**
- * The abstract class Satellite defines satellites that orbit about a Sun.
- *
- * @see Sun
- */
+ 
 abstract class Satellite implements Host {
-    /**
-     * The color of the Satellite
-     */
+    
     protected final Color color;
-    /**
-     * The x and y coordinates of the Satellite's position.
-     */
+    
     protected double xPos, yPos;
-    /**
-     * The x and y components of the Satellite's velocity.
-     */
+    
     protected double xVel = 0, yVel = 0;
-    /**
-     * The x and y components of the Satellite's acceleration.
-     */
+    
     protected double xAcc = 0, yAcc = 0, dt;
-    /**
-     * The diameter of the Satellite.
-     */
+    
     protected double diameter;
-    /**
-     * The mass of the Satellite (arb. units).
-     */
+    
     protected double mass;
-    /**
-     * The Host about which the Satellite orbits.
-     *
-     * @see Host
-     */
+   
     protected Host host;
 
-    /**
-     * Constructor for Satellite objects.
-     *
-     * @param mDt       The time increment for calculating the motion.
-     * @param mDiameter The diameter of the satellite (arb. units).
-     * @param mRadius   The initial radius of the Satellite's orbit.
-     * @param mMass     The mass of the Satellite (arb. units).
-     * @param mHost     The Host about which the Satellite orbits.
-     * @see Host
-     */
+     
     public Satellite(double mDt,
                      double mDiameter,
                      double mRadius,
@@ -865,42 +643,22 @@ abstract class Satellite implements Host {
         mass = mMass;
         color = mColor;
         host = mHost;
-        //
-        // The satellite's coordinates (xPos, yPos) relative to the
-        // coordinates of the host satellite.
-        //
+      
         xPos = Math.random() * mRadius;
         yPos = Math.sqrt(mRadius * mRadius - xPos * xPos);
-        //
-        // Choose at random from the four Cartesian quadrants for the
-        // intial position.
-        //
+        
         if (probOneHalf())
             xPos *= -1;
         if (probOneHalf())
             yPos *= -1;
     }
 
-    /**
-     * The method probOneHalf returns true with probability 1/2, otherwise
-     * returns false.
-     *
-     * @return boolean
-     */
+    
     protected boolean probOneHalf() {
         return Math.random() > 0.5;
     }
 
-    /**
-     * The method getAbsPos calculates the absolute position of the
-     * Satellite. This is the position used to display the Satellite
-     * and is taken with respect to the upper left corner of the display.
-     *
-     * @param mAxis The cartesian axis with respect to which the position
-     *              is to be calculated.
-     * @return double The absolute position of the Satellite with respect
-     * to the given axis.
-     */
+     
     public double getAbsPos(byte mAxis) {
         if (mAxis == Coord.X)
             return xPos / SkyFrame.getScaleFactor() + host.getAbsPos(mAxis);
@@ -908,16 +666,7 @@ abstract class Satellite implements Host {
             return yPos / SkyFrame.getScaleFactor() + host.getAbsPos(mAxis);
     }
 
-    /**
-     * The getRelPosScaled calculate the relative position of the Satellite
-     * scaled by the scale factor of the SkyFrame.
-     *
-     * @param mAxis The cartesian axis with respect to which the position
-     *              is to be calculated.
-     * @return double The relative position of the Satellite scaled and
-     * with respect to the given axis.
-     * @see SkyFrame
-     */
+     
     protected double getRelPosScaled(byte mAxis) {
         if (mAxis == Coord.X)
             return xPos / SkyFrame.getScaleFactor();
@@ -925,15 +674,7 @@ abstract class Satellite implements Host {
             return yPos / SkyFrame.getScaleFactor();
     }
 
-    /**
-     * The method getRelPosUnscaled calculates the relative position of
-     * the Satellite without scaling.
-     *
-     * @param mAxis The cartesian axis with respect to which to calculate
-     *              the position.
-     * @return double The relative position of the Satellite with respect
-     * to the given axis.
-     */
+    
     protected double getRelPosUnscaled(byte mAxis) {
         if (mAxis == Coord.X)
             return xPos;
@@ -941,13 +682,7 @@ abstract class Satellite implements Host {
             return yPos;
     }
 
-    /**
-     * The method getTheta returns the angular position of the Satellite.
-     * The angle is measured clockwise from the positive horizontal axis,
-     * with the Sun at the origin.
-     *
-     * @return double The angular position in radians.
-     */
+   
     public double getTheta() {
         double theta = Math.atan(yPos / xPos);
         if (xPos < 0)
@@ -956,28 +691,14 @@ abstract class Satellite implements Host {
             theta = 2 * Math.PI + theta;
         return theta;
     }
-
-    /**
-     * The method getVel calculates a Cartesian component of the Satellite's
-     * velocity (arb. units).
-     *
-     * @param mAxis The cartesian component of the velocity to calculate.
-     * @return double A cartesian component of the velocity (arb. units).
-     */
+ 
     public double getVel(byte mAxis) {
         if (mAxis == Coord.X)
             return xVel;
         else
             return yVel;
     }
-
-    /**
-     * The method getAcc calculates a Cartesian component of the Satellite's
-     * acceleration (arb. units).
-     *
-     * @param mAxis The cartesian component of the acceleration to calculate.
-     * @return double A cartesian component of the acceleration (arb. units).
-     */
+ 
     public double getAcc(byte mAxis) {
         if (mAxis == Coord.X)
             return xAcc;
@@ -985,48 +706,24 @@ abstract class Satellite implements Host {
             return yAcc;
     }
 
-    /**
-     * The abstract method translate calculates the displacement of the
-     * Satellite as a function of time and updates the Satellite's
-     * coordinates xPos and yPos.
-     */
+     
     public abstract void translate();
 
-    /**
-     * The method getDiameter returns the Satellite's diameter.
-     *
-     * @return double.
-     */
+    
     public double getDiameter() {
         return diameter;
     }
 
-    /**
-     * The method getColor returns the Satellite's color.
-     *
-     * @return Color
-     * @see Color
-     */
+    
     public Color getColor() {
         return color;
     }
 
-    /**
-     * The method getMass returns the Satellite's mass (arb. units).
-     *
-     * @return double
-     */
+     
     public double getMass() {
         return mass;
     }
-
-    /**
-     * The method draw displays the Satellite.
-     *
-     * @param comp2D The Graphics2D object in which to display the
-     *               Satellite.
-     * @see Graphics2D
-     */
+ 
     public void draw(Graphics2D comp2D) {
         double zoomedDiameter = diameter / SkyFrame.getScaleFactor();
         Ellipse2D.Double form =
@@ -1039,74 +736,33 @@ abstract class Satellite implements Host {
     }
 }
 
-/**
- * Class Planet extends Satellite @see Satellite and implements the planets
- * that revolve about the Sun @see Sun. A Planet is given an initial
- * position and velocity and follows Newton's laws of motion.
- */
+ 
 class Planet extends Satellite {
-    /**
-     * The maximum number of previous positions that are recorded.
-     */
+     
     private final int maxPrevPositions = 128;
-    /**
-     * Total energy of the planet.
-     */
+ 
     private final double TE;
-    /**
-     * The actual number of moons orbiting around the planet.
-     */
+     
     private final byte numOfMoons;
-    /**
-     * The maximum number of moons that may orbit around the planet.
-     */
+    
     private final byte maxNumOfMoons = 4;
-    /**
-     * An array of int's used to indicate the previous positions of the planet.
-     * Used to plot the trajectory of the planet. The array is filled and
-     * the index of the current position is tracked.
-     */
+    
     private final int[] prevXPos;
     private final int[] prevYPos;
-    /**
-     * Determines the number of translations between which the position of
-     * the Planet is recorded.
-     */
+     
     private final int recordPosition = 5;
-    /**
-     * The panel in which the planet is displayed.
-     */
+     
     private final SkyPanel hostPanel;
-    /**
-     * Used to index into the position arrays to indicate the current position
-     * of the planet.
-     */
+    
     private int currPosition = 0;
-    /**
-     * Counts the number of transaltions the Planet undergoes.
-     */
+    
     private int count = 0;
-    /**
-     * Indicates when we must loop back to the beginning of the previous
-     * position array
-     */
+     
     private boolean looped = false;
-    /**
-     * The array of moons that orbit around the planet.
-     */
+     
     private Moon[] moon;
 
-    /**
-     * Constructor.
-     *
-     * @param mDt        The time increment for calculting the motion of the planet.
-     * @param mDiameter  The diameter of the planet in pixels.
-     * @param mRadius    The radius of the planet's orbit in pixels.
-     * @param mColor     The color of the planet. @see Color
-     * @param mMass      The planet's mass in arbitrary units.
-     * @param mHostPanel The panel in which the planet is displayed.
-     * @param mHost      The Host object about which the planet orbits. @see Host
-     */
+    
     public Planet(double mDt,
                   double mDiameter,
                   double mRadius,
@@ -1137,18 +793,11 @@ class Planet extends Satellite {
                 getRelPosUnscaled(Coord.X) +
                 getRelPosUnscaled(Coord.Y) *
                         getRelPosUnscaled(Coord.Y));
-        //
-        // For calculating the force due to gravity, we set the universal
-        // gravitational constant to one (or incorporate it into the sun's
-        // mass).
-        //
+        
         double forceDueToGravity = host.getMass() * mass /
                 (distToHost * distToHost);
         double theta = getTheta();
-        //
-        // The following formula for the velocity ensures that the
-        // planet's initial motion about the sun is circular.
-        //
+        
         yVel = Math.sqrt(host.getMass() / distToHost) *
                 Math.sin(theta + Math.PI / 2);
         xVel = Math.sqrt(host.getMass() / distToHost) *
@@ -1156,17 +805,12 @@ class Planet extends Satellite {
 
         xAcc = forceDueToGravity * Math.cos(theta + Math.PI) / mass;
         yAcc = forceDueToGravity * Math.sin(theta + Math.PI) / mass;
-        //
-        // Record the initial total energy of planet.
-        //
+        
         TE = mass * (xVel * xVel + yVel * yVel) / 2 +
                 mass * Math.sqrt(xAcc * xAcc + yAcc * yAcc) * distToHost;
     }
 
-    /**
-     * The method translate calculates the motion of the planet by numerically
-     * integrating Newton's laws of motion.
-     */
+    
     public void translate() {
         double force, distToHost, theta;
 
@@ -1204,10 +848,7 @@ class Planet extends Satellite {
         }
     }
 
-    /**
-     * The method recordPosition records the current position of the planet
-     * in the arrays prevXPos and prevYPos.
-     */
+    
     private void recordPosition() {
         if (++count > (int) (recordPosition / dt)) {
             count = 0;
@@ -1221,51 +862,32 @@ class Planet extends Satellite {
         }
     }
 
-    /**
-     * The method getKE returns the kinetic energy of the planet in arbitrary
-     * units.
-     */
+    
     public double getKE() {
         return mass * (xVel * xVel + yVel * yVel) / 2;
     }
 
-    /**
-     * The method getPE returns the potential energy of the planet in arbitrary
-     * units.
-     */
+   
     public double getPE() {
         return mass * Math.sqrt(xAcc * xAcc + yAcc * yAcc) *
                 Math.sqrt(xPos * xPos + yPos * yPos);
     }
 
-    /**
-     * The method getTE returns the total energy of the planet in arbitrary
-     * units.
-     */
+    
     public double getTE() {
         return TE;
     }
 
-    /**
-     * The method draw displays the Planet in scaled units of pixels.
-     *
-     * @param comp2D The Graphics2D object in which to display the
-     *               planet.
-     * @see Graphics2D
-     */
+    
     public void draw(Graphics2D comp2D) {
         double zoomedDiameter = diameter / SkyFrame.getScaleFactor();
-        //
-        // Draw the night-time semi-circle of the planet.
-        //
+         
         comp2D.setColor(Color.darkGray);
         comp2D.fill(semiCircle(getAbsPos(Coord.X),
                 getAbsPos(Coord.Y),
                 zoomedDiameter,
                 getTheta() + 3 * Math.PI / 2));
-        //
-        // Draw the day-time semi-circle of the planet.
-        //
+        
         comp2D.setColor(color);
         comp2D.fill(semiCircle(getAbsPos(Coord.X),
                 getAbsPos(Coord.Y),
@@ -1283,12 +905,7 @@ class Planet extends Satellite {
             moon[i].draw(comp2D);
     }
 
-    /**
-     * The method drawPrevPositions draws the previous positions of the planet
-     * by placing dots to indicate it's path.
-     *
-     * @param comp2D The Graphics2D object used for the display.
-     */
+    
     private void drawPrevPositions(Graphics2D comp2D) {
         int end;
         int x, y;
@@ -1306,30 +923,14 @@ class Planet extends Satellite {
         }
     }
 
-    /**
-     * The method erasePrevPostions removes the dots indicating the previous
-     * position of the planet from the screen.
-     */
+    
     public void erasePrevPositions() {
         looped = false;
         currPosition = 0;
         count = 0;
     }
 
-    /**
-     * The method semiCircle is used to draw a day-time and night-time
-     * semi-circle of the planet with respect to the Host about which
-     * the planet orbits.
-     *
-     * @param x     The scaled horizontal positon of the planet with respect
-     *              to the Host about which the planet orbits.
-     * @param y     The scaled vertical positon of the planet with respect
-     *              to the Host about which the planet orbits.
-     * @param dia   The scaled diameter of the planet.
-     * @param theta The angular position of the planet.
-     * @return Area A semi-circular area used to draw the day-time or
-     * night-time part of the planet.
-     */
+     
     private Area semiCircle(double x, double y, double dia, double theta) {
         double xp = x - dia / 2;
         double yp = y - dia / 2;
@@ -1344,22 +945,9 @@ class Planet extends Satellite {
     }
 }
 
-/**
- * The class Moon defines a moon which executes pure circular motion about
- * it's host, so the formulas for calculating position are simplified compared
- * to those used for calculating planetary motion about the sun.
- *
- * @see Planet
- */
+ 
 class Moon extends Satellite {
-    /**
-     * Constructor.
-     *
-     * @param mDt       The time increment used to integrate the equations of motion.
-     * @param mDiameter The diameter of the moon in pixels.
-     * @param mRadius   The radius of the moon's orbit.
-     * @param mHost     The host about which the moon orbits.
-     */
+     
     public Moon(double mDt,
                 double mDiameter,
                 double mRadius,
@@ -1367,13 +955,7 @@ class Moon extends Satellite {
         super(mDt, mDiameter, mRadius, Color.lightGray, 1, mHost);
     }
 
-    /**
-     * The method translate calculates the motion of the moon. Since moons
-     * are only allowed to undergo circular motion, the calculation is
-     * simplified compared to planetary motion.
-     *
-     * @see Planet
-     */
+      
     public void translate() {
         double r, theta;
         //
@@ -1396,20 +978,9 @@ class Moon extends Satellite {
     }
 }
 
-/**
- * The class Sun extends Satellite @see Satellite and defines the origin
- * about which all planets orbit in the solar system. It is yellow and
- * has rays of random length eminatting from it.
- */
+ 
 class Sun extends Satellite {
-    /**
-     * Constructor.
-     *
-     * @param mDiameter The Diameter of the sun in pixels.
-     * @param mMass     The mass of the sun in arbitrary units.
-     * @param mXPos     The position of the sun on the horizontal axis.
-     * @param mYPos     The position of the sun on the vertical axis.
-     */
+  
     public Sun(double mDiameter,
                double mMass,
                double mXPos,
@@ -1424,13 +995,7 @@ class Sun extends Satellite {
         xPos = mXPos;
         yPos = mYPos;
     }
-
-    /**
-     * The method getAbsPos returns the absolute position of the Sun in pixels.
-     *
-     * @param mAxis The cartesian axis of interest.
-     * @return double The absolute positon of the Sun in pixels.
-     */
+ 
     public double getAbsPos(byte mAxis) {
         if (mAxis == Coord.X)
             return xPos;
@@ -1438,25 +1003,12 @@ class Sun extends Satellite {
             return yPos;
     }
 
-    /**
-     * The methos setMass allows the user to set the mass of the sun in order
-     * to observe the effects on planetary motion. The mass is measured in
-     * arbitray units.
-     *
-     * @param newMass The new mass of the sun in arbitrary units.
-     */
+    
     public void setMass(double newMass) {
         diameter *= newMass / mass;
         mass = newMass;
     }
-
-    /**
-     * The method draw displays the Sun in scaled units of pixels.
-     *
-     * @param comp2D The Graphics2D object in which to display the
-     *               Sun.
-     * @see Graphics2D
-     */
+ 
     public void draw(Graphics2D comp2D) {
         super.draw(comp2D);
 
@@ -1466,9 +1018,7 @@ class Sun extends Satellite {
         double xf, yf;
 
         double zoomedDiameter = diameter / SkyFrame.getScaleFactor();
-        //
-        // Draw rays of sun.
-        //
+         
         for (int i = 0; i < 10; ++i) {
             if (probOneHalf())
                 xf = xPos + Math.random() * zoomedDiameter * 1.5;
